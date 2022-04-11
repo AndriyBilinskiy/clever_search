@@ -1,80 +1,81 @@
 def reading_file(path):
-    with open(path, "r") as file:
-        content = []
-        for line in file:
-            content.append(line.rstrip())
-    return content
+	with open(path, "r") as file:
+		content = []
+		for line in file:
+			content.append(line.rstrip())
+	return content
 
 
 def dct_maker(content: list):
-    final = []
-    res = []
-    previous = []
-    for line in content:
-        if ")" in line:
-            ind_bracket = line.find(")")
-            if line[ind_bracket - 1].isdecimal() and ind_bracket in (1, 2):
-                res.append(previous)
-                previous = [line]
-        else:
-            previous.append(line)
-    for ind, block in enumerate(res):
-        cool_block = []
-        pivot = ""
-        for item in block:
-            pivot += item
-            if item == "":
-                cool_block.append(pivot)
-                pivot = ""
-        print(cool_block)
-        if ind >= 1:
-            final.append(make_dict(cool_block))
-    return final
+	final = []
+	res = []
+	previous = []
+	for line in content:
+		if ")" in line:
+			ind_bracket = line.find(")")
+			if line[ind_bracket - 1].isdecimal() and ind_bracket in (1, 2):
+				res.append(previous)
+				previous = [line]
+		else:
+			previous.append(line)
+	for ind, block in enumerate(res):
+		cool_block = []
+		pivot = ""
+		for item in block:
+			pivot += item
+			if item == "":
+				cool_block.append(pivot)
+				pivot = ""
+		print(cool_block)
+		if ind >= 1:
+			final.append(make_dict(cool_block))
+	return final
 
 
 def find_nas_punkt(block):
-    return block[0][block[0].find(")") + 2:block[0].find(",")]
+	return block[0][block[0].find(")") + 2:block[0].find(",")]
 
 
 def find_nazva(line):
-    s = ""
-    splited = line.split()
-    for item in splited:
-        if item[0].isupper() or item == "св.":
-            s += item + " "
-    while s[-1] in (" ", ","):
-        s = s[:-1]
-    return s
+	s = ""
+	splited = line.split()
+	for item in splited:
+		if item[0].isupper() or item == "св.":
+			s += item + " "
+	while s[-1] in (" ", ","):
+		s = s[:-1]
+	return s
+
 
 def find_typ(line):
-    splited = line.split(",")
-    # print(splited)
-    try:
-        needed = splited[1][1:]
-    except IndexError:
-        return "мур."
-    expected = needed.split()[0]
-    while expected[-1].isdecimal():
-        expected = expected[:-1]
-    return needed.split()[0]
+	splited = line.split(",")
+	# print(splited)
+	try:
+		needed = splited[1][1:]
+	except IndexError:
+		return "мур."
+	expected = needed.split()[0]
+	while expected[-1].isdecimal():
+		expected = expected[:-1]
+	return needed.split()[0]
+
 
 def make_dict(block: list):
-    res = dict()
+	res = dict()
 
-    nas_punkt = find_nas_punkt(block)
-    # location = to_locate(nas_punkt)
+	nas_punkt = find_nas_punkt(block)
+	# location = to_locate(nas_punkt)
 
-    churches = []
-    churches_str = block[0][block[0].find("ц."):]
-    ch_ch = churches_str.split("ц. ")
-    for church in ch_ch:
-        if church != "":
-            nazva = find_nazva(church)
-            typ = find_typ(church)
-            churches.append({"назва": nazva, "тип": typ, "рік": 1900})
+	churches = []
+	churches_str = block[0][block[0].find("ц."):]
+	ch_ch = churches_str.split("ц. ")
+	for church in ch_ch:
+		if church != "":
+			nazva = find_nazva(church)
+			typ = find_typ(church)
+			churches.append({"назва": nazva, "тип": typ, "рік": 1900})
 
-
-    res = {"протопресвітерат": "Тернопільський",
+	res = {"протопресвітерат": "Тернопільський",
 		"деканат": "Тернопільський",
 		"населений пункт": {
 			"назва": "ТЕРНОПІЛЬ",
@@ -262,7 +263,8 @@ def make_dict(block: list):
 			}
 		]
 	}
-    return res
+	return res
 
 
-print(dct_maker(reading_file("file"))[1])
+if __name__ == "__main__":
+	print(dct_maker(reading_file("file"))[1])
