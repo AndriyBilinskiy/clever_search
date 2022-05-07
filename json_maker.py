@@ -46,6 +46,7 @@ def find_nazva(line):
 		s = s[:-1]
 	return s
 
+
 def find_typ(line):
 	splited = line.split(",")
 	# print(splited)
@@ -73,6 +74,20 @@ def make_dict(block: list):
 			typ = find_typ(church)
 			churches.append({"назва": nazva, "тип": typ, "рік": 1900})
 
+def make_dict(block: list):
+	res = dict()
+
+	nas_punkt = find_nas_punkt(block)
+	# location = to_locate(nas_punkt)
+
+	churches = []
+	churches_str = block[0][block[0].find("ц."):]
+	ch_ch = churches_str.split("ц. ")
+	for church in ch_ch:
+		if church != "":
+			nazva = find_nazva(church)
+			typ = find_typ(church)
+			churches.append({"назва": nazva, "тип": typ, "рік": 1900})
 
 	res = {"протопресвітерат": "Тернопільський",
 		"деканат": "Тернопільський",
@@ -266,4 +281,4 @@ def make_dict(block: list):
 
 
 if __name__ == "__main__":
-	print(dct_maker(reading_file("/Users/andriy/PycharmProjects/pythonProject/clever_search/data/images_Hlynianskyi_txt/file1.txt"))[1])
+	print(dct_maker(reading_file("file"))[1])
